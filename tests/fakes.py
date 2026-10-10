@@ -29,7 +29,9 @@ class ScriptedEmbeddingProvider:
         self.default_dim = default_dim
 
     def embed(self, text: str) -> Embedding:
-        return Embedding.from_list(self.mapping.get(text, [0.0] * self.default_dim))
+        if text in self.mapping:
+            return Embedding.from_list(self.mapping[text])
+        raise KeyError(f"Text '{text}' not in ScriptedEmbeddingProvider mapping")
 
     def embed_batch(self, texts: list[str]) -> list[Embedding]:
         return [self.embed(t) for t in texts]

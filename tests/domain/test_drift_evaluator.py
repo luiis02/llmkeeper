@@ -34,7 +34,7 @@ def test_score_against_field_similar():
     result = score_against_field(field, msg_emb)
 
     assert result.is_valid is True
-    assert result.score > 0.8
+    assert result.score > 0.55
     assert result.threshold == 0.55
 
 

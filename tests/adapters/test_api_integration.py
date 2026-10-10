@@ -1,12 +1,13 @@
 import pytest
-from fastapi.testclient import TestClient
-from llmkeeper.infrastructure.app import create_app
-from llmkeeper.infrastructure.config import Settings
 
 
 @pytest.mark.integration
 def test_full_flow_with_real_embeddings():
     """Integration test with real SentenceTransformer model."""
+    from fastapi.testclient import TestClient
+    from llmkeeper.infrastructure.app import create_app
+    from llmkeeper.infrastructure.config import Settings
+
     settings = Settings()
     app = create_app(settings)
     client = TestClient(app)

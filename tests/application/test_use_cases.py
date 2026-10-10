@@ -20,15 +20,15 @@ from tests.fakes import ScriptedEmbeddingProvider
 def test_create_field():
     provider = ScriptedEmbeddingProvider(
         {
-            "chunk 1": [1.0, 0.0, 0.0],
-            "chunk 2": [0.0, 1.0, 0.0],
+            "This is the first chunk.": [1.0, 0.0, 0.0],
+            "This is the second chunk.": [0.0, 1.0, 0.0],
         }
     )
     field_repo = InMemoryFieldRepository()
     uc = CreateField(embeddings=provider, fields=field_repo)
 
     field = uc.execute(
-        system_prompt="chunk 1. chunk 2.",
+        system_prompt="This is the first chunk. This is the second chunk.",
         strictness_preset=StrictnessLevel.ESTRICTO,
     )
 
@@ -40,24 +40,24 @@ def test_create_field():
 def test_validate_message():
     provider = ScriptedEmbeddingProvider(
         {
-            "chunk 1": [1.0, 0.0],
-            "msg on topic": [0.95, 0.05],
-            "msg off topic": [0.0, 1.0],
+            "This is the first chunk.": [1.0, 0.0],
+            "This is on topic message": [0.95, 0.05],
+            "This is off topic completely": [0.0, 1.0],
         }
     )
     field_repo = InMemoryFieldRepository()
     create_uc = CreateField(embeddings=provider, fields=field_repo)
     field = create_uc.execute(
-        system_prompt="chunk 1.",
+        system_prompt="This is the first chunk.",
         strictness_preset=StrictnessLevel.MODERADO,
     )
 
     validate_uc = ValidateMessage(embeddings=provider, fields=field_repo)
 
-    result_on = validate_uc.execute(field.field_id, "msg on topic")
+    result_on = validate_uc.execute(field.field_id, "This is on topic message")
     assert result_on.is_valid is True
 
-    result_off = validate_uc.execute(field.field_id, "msg off topic")
+    result_off = validate_uc.execute(field.field_id, "This is off topic completely")
     assert result_off.is_valid is False
 
 
@@ -71,11 +71,11 @@ def test_validate_message_field_not_found():
 
 
 def test_adjust_strictness():
-    provider = ScriptedEmbeddingProvider({"chunk 1": [1.0, 0.0]})
+    provider = ScriptedEmbeddingProvider({"This is the first chunk.": [1.0, 0.0]})
     field_repo = InMemoryFieldRepository()
     create_uc = CreateField(embeddings=provider, fields=field_repo)
     field = create_uc.execute(
-        system_prompt="chunk 1.",
+        system_prompt="This is the first chunk.",
         strictness_preset=StrictnessLevel.MODERADO,
     )
 
@@ -87,12 +87,12 @@ def test_adjust_strictness():
 
 
 def test_create_session():
-    provider = ScriptedEmbeddingProvider({"chunk 1": [1.0, 0.0]})
+    provider = ScriptedEmbeddingProvider({"This is the first chunk.": [1.0, .0]})
     field_repo = InMemoryFieldRepository()
     session_repo = InMemorySessionRepository()
 
     create_field_uc = CreateField(embeddings=provider, fields=field_repo)
-    field = create_field_uc.execute(system_prompt="chunk 1.")
+    field = create_field_uc.execute(system_prompt="This is the first chunk.")
 
     create_session_uc = CreateSession(fields=field_repo, sessions=session_repo)
     session = create_session_uc.execute(
@@ -107,16 +107,16 @@ def test_create_session():
 def test_append_message_to_session():
     provider = ScriptedEmbeddingProvider(
         {
-            "chunk 1": [1.0, 0.0],
-            "on topic": [0.9, 0.1],
-            "off topic": [0.0, 1.0],
+            "This is the first chunk.": [1.0, 0.0],
+            "This is on topic message": [0.9, 0.1],
+            "This is off topic completely": [0.0, 1.0],
         }
     )
     field_repo = InMemoryFieldRepository()
     session_repo = InMemorySessionRepository()
 
     create_field_uc = CreateField(embeddings=provider, fields=field_repo)
-    field = create_field_uc.execute(system_prompt="chunk 1.")
+    field = create_field_uc.execute(system_prompt="This is the first chunk.")
 
     create_session_uc = CreateSession(fields=field_repo, sessions=session_repo)
     session = create_session_uc.execute(field.field_id, patience=2)
@@ -125,22 +125,22 @@ def test_append_message_to_session():
         embeddings=provider, fields=field_repo, sessions=session_repo
     )
 
-    session = append_uc.execute(session.session_id, "on topic")
+    session = append_uc.execute(session.session_id, "This is on topic message")
     assert len(session.history) == 1
     assert session.consecutive_off == 0
 
-    session = append_uc.execute(session.session_id, "off topic")
+    session = append_uc.execute(session.session_id, "This is off topic completely")
     assert len(session.history) == 2
     assert session.consecutive_off == 1
 
 
 def test_get_session():
-    provider = ScriptedEmbeddingProvider({"chunk 1": [1.0, 0.0]})
+    provider = ScriptedEmbeddingProvider({"This is the first chunk.": [1.0, 0.0]})
     field_repo = InMemoryFieldRepository()
     session_repo = InMemorySessionRepository()
 
     create_field_uc = CreateField(embeddings=provider, fields=field_repo)
-    field = create_field_uc.execute(system_prompt="chunk 1.")
+    field = create_field_uc.execute(system_prompt="This is the first chunk.")
 
     create_session_uc = CreateSession(fields=field_repo, sessions=session_repo)
     session = create_session_uc.execute(field.field_id)

@@ -15,11 +15,10 @@ from fastapi import FastAPI
 def test_container():
     provider = ScriptedEmbeddingProvider(
         {
-            "chunk 1": [1.0, 0.0, 0.0],
-            "chunk 2": [0.0, 1.0, 0.0],
-            "on topic msg": [0.95, 0.05, 0.0],
-            "off topic msg": [0.0, 0.0, 1.0],
-            "Test prompt": [1.0, 0.0, 0.0],
+            "This is the first chunk.": [1.0, 0.0, 0.0],
+            "This is the second chunk.": [0.0, 1.0, 0.0],
+            "This is on topic message": [0.95, 0.05, 0.0],
+            "This is off topic completely": [0.0, 0.0, 1.0],
         }
     )
     settings = Settings()
@@ -46,7 +45,7 @@ def test_post_fields(client):
     response = client.post(
         "/api/v1/fields",
         json={
-            "system_prompt": "chunk 1. chunk 2.",
+            "system_prompt": "This is the first chunk. This is the second chunk.",
             "strictness_preset": "moderado",
         },
     )
@@ -59,7 +58,7 @@ def test_post_fields(client):
 def test_get_fields(client):
     create_resp = client.post(
         "/api/v1/fields",
-        json={"system_prompt": "chunk 1.", "strictness_preset": "estricto"},
+        json={"system_prompt": "This is the first chunk.", "strictness_preset": "estricto"},
     )
     field_id = create_resp.json()["field_id"]
 
@@ -71,7 +70,7 @@ def test_get_fields(client):
 def test_patch_strictness(client):
     create_resp = client.post(
         "/api/v1/fields",
-        json={"system_prompt": "chunk 1.", "strictness_preset": "moderado"},
+        json={"system_prompt": "This is the first chunk.", "strictness_preset": "moderado"},
     )
     field_id = create_resp.json()["field_id"]
 
@@ -88,13 +87,13 @@ def test_patch_strictness(client):
 def test_validate_message_on_topic(client):
     create_resp = client.post(
         "/api/v1/fields",
-        json={"system_prompt": "chunk 1.", "strictness_preset": "moderado"},
+        json={"system_prompt": "This is the first chunk.", "strictness_preset": "moderado"},
     )
     field_id = create_resp.json()["field_id"]
 
     validate_resp = client.post(
         f"/api/v1/fields/{field_id}/validate",
-        json={"text": "on topic msg"},
+        json={"text": "This is on topic message"},
     )
     assert validate_resp.status_code == 200
     assert validate_resp.json()["is_valid"] is True
@@ -103,13 +102,13 @@ def test_validate_message_on_topic(client):
 def test_validate_message_off_topic(client):
     create_resp = client.post(
         "/api/v1/fields",
-        json={"system_prompt": "chunk 1.", "strictness_preset": "moderado"},
+        json={"system_prompt": "This is the first chunk.", "strictness_preset": "moderado"},
     )
     field_id = create_resp.json()["field_id"]
 
     validate_resp = client.post(
         f"/api/v1/fields/{field_id}/validate",
-        json={"text": "off topic msg"},
+        json={"text": "This is off topic completely"},
     )
     assert validate_resp.status_code == 200
     assert validate_resp.json()["is_valid"] is False
@@ -118,7 +117,7 @@ def test_validate_message_off_topic(client):
 def test_create_session(client):
     create_field = client.post(
         "/api/v1/fields",
-        json={"system_prompt": "chunk 1.", "strictness_preset": "moderado"},
+        json={"system_prompt": "This is the first chunk.", "strictness_preset": "moderado"},
     )
     field_id = create_field.json()["field_id"]
 
@@ -135,7 +134,7 @@ def test_create_session(client):
 def test_append_message_to_session(client):
     create_field = client.post(
         "/api/v1/fields",
-        json={"system_prompt": "chunk 1.", "strictness_preset": "moderado"},
+        json={"system_prompt": "This is the first chunk.", "strictness_preset": "moderado"},
     )
     field_id = create_field.json()["field_id"]
 
@@ -147,7 +146,7 @@ def test_append_message_to_session(client):
 
     msg_resp = client.post(
         f"/api/v1/sessions/{session_id}/messages",
-        json={"text": "on topic msg"},
+        json={"text": "This is on topic message"},
     )
     assert msg_resp.status_code == 200
     assert msg_resp.json()["is_valid"] is True
@@ -157,33 +156,31 @@ def test_append_message_to_session(client):
 def test_session_warning_and_off_topic(client):
     create_field = client.post(
         "/api/v1/fields",
-        json={"system_prompt": "chunk 1.", "strictness_preset": "moderado"},
+        json={"system_prompt": "This is the first chunk.", "strictness_preset": "moderado"},
     )
     field_id = create_field.json()["field_id"]
 
     create_session_resp = client.post(
         f"/api/v1/fields/{field_id}/sessions",
-        json={"patience": 2, "rolling_window": 5},
+        json={"patience": 3, "rolling_window": 5},
     )
     session_id = create_session_resp.json()["session_id"]
 
-    for i in range(3):
+    for i in range(4):
         msg_resp = client.post(
             f"/api/v1/sessions/{session_id}/messages",
-            json={"text": "off topic msg"},
+            json={"text": "This is off topic completely"},
         )
-        if i == 0:
+        if i < 2:
             assert msg_resp.json()["status"] == "warning"
-        elif i == 1:
-            assert msg_resp.json()["status"] == "warning"
-        elif i == 2:
+        else:
             assert msg_resp.json()["status"] == "off_topic"
 
 
 def test_get_session(client):
     create_field = client.post(
         "/api/v1/fields",
-        json={"system_prompt": "chunk 1.", "strictness_preset": "moderado"},
+        json={"system_prompt": "This is the first chunk.", "strictness_preset": "moderado"},
     )
     field_id = create_field.json()["field_id"]
 
