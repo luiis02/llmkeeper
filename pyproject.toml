@@ -6,6 +6,8 @@ build-backend = "hatchling.build"
 name = "llmkeeper"
 version = "0.1.0"
 description = "Local topic-drift guard for LLM conversations"
+license = "AGPL-3.0-only"
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
 dependencies = [
   "fastapi>=0.118,<1.0",
