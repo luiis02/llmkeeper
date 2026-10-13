@@ -1,0 +1,178 @@
+{
+  "info": {
+    "_postman_id": "llmkeeper-collection-es",
+    "name": "LLMKeeper",
+    "description": "Colección de ejemplos para la API de LLMKeeper. Ejecuta primero 'Crear campo' y 'Crear sesión': guardan field_id y session_id automáticamente en las variables de la colección.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:8000/api/v1", "type": "string" },
+    { "key": "field_id", "value": "", "type": "string" },
+    { "key": "session_id", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1. Campos",
+      "item": [
+        {
+          "name": "Crear campo (preset moderado)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('field_id', json.field_id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"system_prompt\": \"Eres un experto en cocina. Ayudas con recetas, ingredientes y técnicas culinarias.\",\n  \"strictness_preset\": \"moderado\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/fields", "host": ["{{baseUrl}}"], "path": ["fields"] },
+            "description": "Construye el campo semántico a partir del system prompt. Presets: muy_estricto, estricto, moderado, permisivo, muy_permisivo."
+          }
+        },
+        {
+          "name": "Crear campo con temas extra",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"system_prompt\": \"Eres un asistente de atención al cliente de una tienda de electrónica.\",\n  \"extra_topics\": [\"devoluciones de productos\", \"estado de un pedido\", \"garantías\"],\n  \"strictness_preset\": \"estricto\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/fields", "host": ["{{baseUrl}}"], "path": ["fields"] }
+          }
+        },
+        {
+          "name": "Crear campo con umbral personalizado",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"system_prompt\": \"Eres un tutor de matemáticas de secundaria.\",\n  \"strictness_value\": 0.6\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/fields", "host": ["{{baseUrl}}"], "path": ["fields"] },
+            "description": "strictness_value debe estar entre 0 y 1."
+          }
+        },
+        {
+          "name": "Consultar campo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/fields/{{field_id}}", "host": ["{{baseUrl}}"], "path": ["fields", "{{field_id}}"] }
+          }
+        },
+        {
+          "name": "Cambiar rigurosidad (preset)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"preset\": \"estricto\"\n}" },
+            "url": { "raw": "{{baseUrl}}/fields/{{field_id}}/strictness", "host": ["{{baseUrl}}"], "path": ["fields", "{{field_id}}", "strictness"] }
+          }
+        },
+        {
+          "name": "Cambiar rigurosidad (valor personalizado)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"custom_value\": 0.7\n}" },
+            "url": { "raw": "{{baseUrl}}/fields/{{field_id}}/strictness", "host": ["{{baseUrl}}"], "path": ["fields", "{{field_id}}", "strictness"] }
+          }
+        },
+        {
+          "name": "Validar mensaje en tema (sin estado)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"text\": \"¿Cuáles son los mejores ingredientes para una paella?\"\n}" },
+            "url": { "raw": "{{baseUrl}}/fields/{{field_id}}/validate", "host": ["{{baseUrl}}"], "path": ["fields", "{{field_id}}", "validate"] },
+            "description": "La puntuación depende del modelo y del prompt; no siempre será válido."
+          }
+        },
+        {
+          "name": "Validar mensaje fuera de tema (sin estado)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"text\": \"¿Quién ganó el mundial de fútbol de 2014?\"\n}" },
+            "url": { "raw": "{{baseUrl}}/fields/{{field_id}}/validate", "host": ["{{baseUrl}}"], "path": ["fields", "{{field_id}}", "validate"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Sesiones",
+      "item": [
+        {
+          "name": "Crear sesión (valores por defecto)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('session_id', json.session_id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/fields/{{field_id}}/sessions", "host": ["{{baseUrl}}"], "path": ["fields", "{{field_id}}", "sessions"] }
+          }
+        },
+        {
+          "name": "Crear sesión (paciencia y ventana personalizadas)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"patience\": 2,\n  \"rolling_window\": 4\n}" },
+            "url": { "raw": "{{baseUrl}}/fields/{{field_id}}/sessions", "host": ["{{baseUrl}}"], "path": ["fields", "{{field_id}}", "sessions"] },
+            "description": "patience: mensajes fuera de tema tolerados antes de off_topic. rolling_window: tamaño de la media móvil."
+          }
+        },
+        {
+          "name": "Añadir mensaje en tema",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"text\": \"¿Cuánto tiempo hay que cocer el arroz para una paella?\"\n}" },
+            "url": { "raw": "{{baseUrl}}/sessions/{{session_id}}/messages", "host": ["{{baseUrl}}"], "path": ["sessions", "{{session_id}}", "messages"] }
+          }
+        },
+        {
+          "name": "Añadir mensaje fuera de tema",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"text\": \"¿Quién dirigió la película Titanic?\"\n}" },
+            "url": { "raw": "{{baseUrl}}/sessions/{{session_id}}/messages", "host": ["{{baseUrl}}"], "path": ["sessions", "{{session_id}}", "messages"] },
+            "description": "Estados: on_topic, warning (entre 1 y patience-1 fuera de tema) y off_topic (patience o más)."
+          }
+        },
+        {
+          "name": "Consultar estado de sesión",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/sessions/{{session_id}}", "host": ["{{baseUrl}}"], "path": ["sessions", "{{session_id}}"] }
+          }
+        }
+      ]
+    }
+  ]
+}

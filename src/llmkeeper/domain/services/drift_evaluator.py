@@ -29,7 +29,12 @@ def append_message_to_session(
     session: Session, text: str, result: ValidationResult
 ) -> Session:
     session.history.append(
-        MessageScore(text=text, score=result.score, is_valid=result.is_valid)
+        MessageScore(
+            text=text,
+            score=result.score,
+            is_valid=result.is_valid,
+            threshold=result.threshold,
+        )
     )
     if result.is_valid:
         session.consecutive_off = 0

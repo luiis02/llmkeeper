@@ -35,7 +35,7 @@ def test_score_against_field_similar():
 
     assert result.is_valid is True
     assert result.score > 0.55
-    assert result.threshold == 0.55
+    assert result.threshold == 0.22
 
 
 def test_score_against_field_dissimilar():

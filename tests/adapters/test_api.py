@@ -81,7 +81,7 @@ def test_patch_strictness(client):
     assert patch_resp.status_code == 200
 
     get_resp = client.get(f"/api/v1/fields/{field_id}")
-    assert abs(get_resp.json()["threshold"] - 0.75) < 0.001
+    assert abs(get_resp.json()["threshold"] - 0.32) < 0.001
 
 
 def test_validate_message_on_topic(client):

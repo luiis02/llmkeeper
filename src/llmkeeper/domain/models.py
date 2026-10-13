@@ -46,11 +46,11 @@ class StrictnessLevel(str, Enum):
     @property
     def threshold(self) -> float:
         return {
-            StrictnessLevel.MUY_ESTRICTO: 0.75,
-            StrictnessLevel.ESTRICTO: 0.65,
-            StrictnessLevel.MODERADO: 0.55,
-            StrictnessLevel.PERMISIVO: 0.45,
-            StrictnessLevel.MUY_PERMISIVO: 0.35,
+            StrictnessLevel.MUY_ESTRICTO: 0.32,
+            StrictnessLevel.ESTRICTO: 0.27,
+            StrictnessLevel.MODERADO: 0.22,
+            StrictnessLevel.PERMISIVO: 0.17,
+            StrictnessLevel.MUY_PERMISIVO: 0.12,
         }[self]
 
 
@@ -106,6 +106,7 @@ class MessageScore:
     text: str
     score: float
     is_valid: bool
+    threshold: float = 0.0
     timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
 

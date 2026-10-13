@@ -1,0 +1,80 @@
+14:04:42 INFO start | model=google/embeddinggemma-2 | log=/home/luis/llmkeeper/scripts/injection_direction.log
+14:04:42 INFO loading dataset deepset/prompt-injections
+14:04:44 INFO loading dataset S-Labs/prompt-injection-dataset
+14:04:46 INFO dedup: 15953 raw rows -> 15794 unique (1 conflicting texts dropped)
+14:04:46 INFO prompts: 15794 | injections: 7038 | safe: 8756
+14:04:46 INFO split 80/20 (seed 42): train=12635 test=3159
+14:04:46 INFO loading encoder google/embeddinggemma-2
+14:04:51 INFO encoding train set (12635)
+14:12:30 INFO encode: 800/12635 texts (6.3%) | elapsed 458s | eta 6785s
+14:18:39 INFO encode: 1600/12635 texts (12.7%) | elapsed 828s | eta 5713s
+14:21:49 INFO start | model=google/embeddinggemma-2 | log=/home/luis/llmkeeper/scripts/injection_direction.log
+14:21:49 INFO loading dataset deepset/prompt-injections
+14:21:51 INFO loading dataset S-Labs/prompt-injection-dataset
+14:21:53 INFO dedup: 15953 raw rows -> 15794 unique (1 conflicting texts dropped)
+14:21:53 INFO prompts: 15794 | injections: 7038 | safe: 8756
+14:21:53 INFO split 80/20 (seed 42): train=12635 test=3159
+14:21:53 INFO loading encoder google/embeddinggemma-2
+14:22:00 INFO encoding train set (12635)
+14:28:16 INFO encode: 2400/12635 texts (19.0%) | elapsed 1405s | eta 5995s
+14:33:28 INFO encode: 800/12635 texts (6.3%) | elapsed 688s | eta 10187s
+14:39:29 INFO encode: 3200/12635 texts (25.3%) | elapsed 2078s | eta 6130s
+14:42:25 INFO encode: 1600/12635 texts (12.7%) | elapsed 1226s | eta 8457s
+14:53:12 INFO encode: 2400/12635 texts (19.0%) | elapsed 1872s | eta 7986s
+14:56:39 INFO encode: 4000/12635 texts (31.7%) | elapsed 3108s | eta 6712s
+15:03:52 INFO encode: 3200/12635 texts (25.3%) | elapsed 2512s | eta 7411s
+15:08:02 INFO encode: 4800/12635 texts (38.0%) | elapsed 3791s | eta 6192s
+15:18:45 INFO encode: 5600/12635 texts (44.3%) | elapsed 4434s | eta 5574s
+15:20:41 INFO encode: 4000/12635 texts (31.7%) | elapsed 3521s | eta 7605s
+15:30:41 INFO encode: 6400/12635 texts (50.7%) | elapsed 5150s | eta 5021s
+15:31:35 INFO encode: 4800/12635 texts (38.0%) | elapsed 4175s | eta 6819s
+15:41:11 INFO encode: 7200/12635 texts (57.0%) | elapsed 5780s | eta 4367s
+15:41:35 INFO encode: 5600/12635 texts (44.3%) | elapsed 4775s | eta 6003s
+15:53:06 INFO encode: 6400/12635 texts (50.7%) | elapsed 5466s | eta 5330s
+15:55:17 INFO encode: 8000/12635 texts (63.3%) | elapsed 6626s | eta 3843s
+16:03:14 INFO encode: 7200/12635 texts (57.0%) | elapsed 6074s | eta 4589s
+16:04:01 INFO encode: 8800/12635 texts (69.6%) | elapsed 7150s | eta 3120s
+16:16:05 INFO encode: 9600/12635 texts (76.0%) | elapsed 7874s | eta 2493s
+16:17:24 INFO encode: 8000/12635 texts (63.3%) | elapsed 6924s | eta 4016s
+16:25:56 INFO encode: 8800/12635 texts (69.6%) | elapsed 7436s | eta 3245s
+16:26:33 INFO encode: 10400/12635 texts (82.3%) | elapsed 8502s | eta 1831s
+16:37:08 INFO encode: 11200/12635 texts (88.6%) | elapsed 9137s | eta 1175s
+16:38:31 INFO encode: 9600/12635 texts (76.0%) | elapsed 8192s | eta 2594s
+16:48:46 INFO encode: 12000/12635 texts (95.0%) | elapsed 9835s | eta 525s
+16:52:33 INFO encode: 10400/12635 texts (82.3%) | elapsed 9033s | eta 1946s
+16:58:38 INFO encode: 12635/12635 texts (100.0%) | elapsed 10427s | eta 0s
+16:58:38 INFO encoding test set (3159)
+17:03:35 INFO encode: 11200/12635 texts (88.6%) | elapsed 9695s | eta 1247s
+17:08:40 INFO encode: 800/3159 texts (25.3%) | elapsed 602s | eta 1782s
+17:12:45 INFO encode: 12000/12635 texts (95.0%) | elapsed 10245s | eta 546s
+17:19:58 INFO encode: 1600/3159 texts (50.6%) | elapsed 1280s | eta 1254s
+17:20:19 INFO encode: 12635/12635 texts (100.0%) | elapsed 10699s | eta 0s
+17:20:20 INFO encoding test set (3159)
+17:28:44 INFO encode: 800/3159 texts (25.3%) | elapsed 505s | eta 1494s
+17:29:11 INFO encode: 2400/3159 texts (76.0%) | elapsed 1833s | eta 586s
+17:38:37 INFO encode: 3159/3159 texts (100.0%) | elapsed 2399s | eta 0s
+17:38:37 INFO building vector DB
+17:38:43 INFO db: inserted 4096/5629 injection directions
+17:38:45 INFO db: inserted 5629/5629 injection directions
+17:38:45 INFO vector DB 'injection_directions' at /home/luis/llmkeeper/.cache/injection_direction: 5629 injection directions stored
+17:38:45 INFO querying nearest injection for 3159 test prompts
+17:38:47 INFO max FP allowed: 157 (5% of 3159 test prompts)
+17:38:47 INFO solving MILP threshold (CBC)
+17:39:01 INFO encode: 1600/3159 texts (50.6%) | elapsed 1121s | eta 1099s
+17:39:31 INFO optimal threshold (cosine distance): 0.1397
+17:39:31 INFO found 1140/1409 injections | FP 139/1750 (7.9% of safe, 4.4% of test)
+17:39:31 INFO recall=0.809 precision=0.891 TN=1611 FN=269
+17:39:31 INFO done in 12888s
+17:46:05 INFO encode: 2400/3159 texts (76.0%) | elapsed 1546s | eta 495s
+17:52:31 INFO encode: 3159/3159 texts (100.0%) | elapsed 1931s | eta 0s
+17:52:31 INFO building vector DB
+17:52:35 INFO db: inserted 4096/5629 injection directions
+17:52:36 INFO db: inserted 5629/5629 injection directions
+17:52:36 INFO vector DB 'injection_directions' at /home/luis/llmkeeper/.cache/injection_direction: 5629 injection directions stored
+17:52:36 INFO querying nearest injection for 3159 test prompts
+17:52:38 INFO max FP allowed: 157 (5% of 3159 test prompts)
+17:52:38 INFO solving MILP threshold (CBC)
+17:53:00 INFO optimal threshold (cosine distance): 0.1397
+17:53:00 INFO found 1141/1409 injections | FP 140/1750 (8.0% of safe, 4.4% of test)
+17:53:00 INFO recall=0.810 precision=0.891 TN=1610 FN=268
+17:53:00 INFO done in 12671s

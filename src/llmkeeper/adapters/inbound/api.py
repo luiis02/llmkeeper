@@ -132,7 +132,7 @@ def create_router(
         return MessageResponseWithSession(
             score=last_msg.score,
             is_valid=last_msg.is_valid,
-            threshold=session.history[-1].score if session.history else 0.0,
+            threshold=last_msg.threshold,
             rolling_average=session.rolling_average(),
             status=session.status.value,
             consecutive_off=session.consecutive_off,

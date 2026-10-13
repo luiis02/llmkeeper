@@ -34,7 +34,7 @@ def test_create_field():
 
     assert field.field_id is not None
     assert len(field.anchors) >= 2
-    assert field.strictness.threshold == 0.65
+    assert field.strictness.threshold == 0.27
 
 
 def test_validate_message():
@@ -83,7 +83,7 @@ def test_adjust_strictness():
     adjust_uc.execute(field.field_id, preset=StrictnessLevel.MUY_ESTRICTO)
 
     updated = field_repo.get(field.field_id)
-    assert updated.strictness.threshold == 0.75
+    assert updated.strictness.threshold == 0.32
 
 
 def test_create_session():

@@ -82,4 +82,4 @@ def test_build_topic_field():
     assert field.field_id == "test_field"
     assert len(field.anchors) == 2
     assert field.centroid.dim == 3
-    assert field.strictness.threshold == 0.55
+    assert field.strictness.threshold == 0.22
