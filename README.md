@@ -218,6 +218,14 @@ También puedes indicar un `strictness_value` numérico en `[0, 1]`. Los presets
 | [docs/desarrollo.md](docs/desarrollo.md) | Tests, cómo extender el proyecto y limitaciones conocidas |
 | [scripts/README.md](scripts/README.md) | Experimento de detección de *prompt injections* por dirección vectorial (separado del servicio) |
 
+## Experimento: detección de prompt injections
+
+Además del servicio, el repositorio incluye un experimento independiente en `scripts/injection_direction.py`. Codifica prompts con el mismo modelo de embeddings, guarda las direcciones de las inyecciones conocidas en ChromaDB y usa un MILP con PuLP para elegir el umbral de distancia que maximiza `TP − FP`, con al menos un 95 % de los prompts seguros sin marcar.
+
+No forma parte del servicio y tiene dependencias propias (`datasets`, `pulp`, `chromadb`). Detalles, configuración y limitaciones en [scripts/README.md](scripts/README.md).
+
+> **Pendiente:** las métricas de `scripts/README.md` y las de la última ejecución registrada en `scripts/injection_direction.log` no coinciden. Hasta verificarlas no se citan aquí cifras de resultados.
+
 ## Tests
 
 ```bash
