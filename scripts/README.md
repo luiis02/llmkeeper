@@ -1,5 +1,21 @@
 # Detección de prompt injections por dirección vectorial
 
+## Flujo
+
+```mermaid
+flowchart TD
+    A["Datasets de Hugging Face<br/>deepset + S-Labs"] --> B["Deduplicar por texto<br/>15 794 prompts únicos"]
+    B --> C["Split 80/20 aleatorio<br/>semilla 42"]
+    C --> D["Codificar con MiniLM<br/>vector normalizado = dirección"]
+    D --> E["Train: solo inyecciones<br/>→ ChromaDB (coseno)"]
+    D --> F["Test: distancia coseno a la<br/>inyección más cercana d_i"]
+    E --> F
+    F --> G{"MILP (PuLP / CBC)<br/>maximizar TP − FP<br/>con FP ≤ 5 % del test"}
+    G --> H["Umbral t"]
+    H --> I["Clasificar: inyección si d_i ≤ t"]
+    I --> J["Métricas: recall, precisión,<br/>TP, FP, TN, FN"]
+```
+
 Pipeline en `scripts/injection_direction.py` que aprende una "dirección de inyección" a partir de dos datasets públicos de prompt injections y evalúa un umbral de detección optimizado con PuLP.
 
 ## Qué hace
